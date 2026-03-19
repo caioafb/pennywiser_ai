@@ -25,9 +25,7 @@ SECRET_KEY = 'django-insecure-m*&&q7555v&(8j#ert7sw0s&3e_c3ri%&isp!pjh6j7flo#r52
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    'pennywiser-2kkx.onrender.com',
-]
+ALLOWED_HOSTS = []
 
 LOGIN_URL = '/login'
 

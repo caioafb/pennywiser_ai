@@ -3,86 +3,92 @@
 {% block body %}
 
     <div class="forms">
-        <h2>Settings</h2>
-        <br>
+        <h2 style="margin-bottom: 24px;">Settings</h2>
+
         {% if message %}
             <div id="message" class="alert alert-success">{{ message }}</div>
         {% elif error %}
             <div id="message" class="alert alert-danger">{{ error }}</div>
         {% endif %}
 
-        <h4>Account</h4>
-        <form action="{% url 'settings' %}" method="post">
-            {% csrf_token %}
-            <div class="form-floating mb-3">
-                <input class="form-control" autocomplete="off" id="new_account" name="new_account" type="text" maxlength="30" required>
-                <label for="new_account">New account name</label>
-            </div>
-            <div class="form-floating mb-3">
-                <input class="form-control" autocomplete="off" id="starting_balance" name="starting_balance" type="number" min="0" step="0.01" value=0 maxlength="30">
-                <label for="new_account">Starting balance</label>
-            </div>
-            <input type="hidden" name="option" value="new_account">
-            <input class="btn btn-primary" type="submit" value="Save">
-        </form>
-        <br><br>
-        <hr>
-        <h4>Category</h4>
-        <form action="{% url 'settings' %}" method="post">
-            {% csrf_token %}
-            <div class="form-floating mb-3">
-                <input class="form-control" autocomplete="off" id="new_category" name="new_category" type="text" maxlength="30" required>
-                <label for="new_category">New category name</label>
-            </div>
-            <div class="check-form">
-                <div class="form-check-inline">
-                    <input class="form-check-input" type="radio" id="expense" name="category_type" value="E" checked="checked">
-                    <label class="form-check-label" for="category_type">Expense</label>
+        <div class="card-pw">
+            <h4>Account</h4>
+            <br>
+            <form action="{% url 'settings' %}" method="post">
+                {% csrf_token %}
+                <div class="form-floating mb-3">
+                    <input class="form-control" autocomplete="off" id="new_account" name="new_account" type="text" maxlength="30" required>
+                    <label for="new_account">New account name</label>
                 </div>
-                <div class="form-check-inline">
-                    <input class="form-check-input" type="radio" id="income" name="category_type" value="I">
-                    <label class="form-check-label" for="category_type">Income</label>
+                <div class="form-floating mb-3">
+                    <input class="form-control" autocomplete="off" id="starting_balance" name="starting_balance" type="number" min="0" step="0.01" value=0 maxlength="30">
+                    <label for="starting_balance">Starting balance</label>
                 </div>
-            </div>
-            <input type="hidden" name="option" value="new_category">
-            <input class="btn btn-primary" type="submit" value="Save">
-        </form>
-        <br><br>
-        <hr>
-        <h4>Company</h4>
-        <form action="{% url 'settings' %}" method="post">
-            {% csrf_token %}
-            <div class="form-floating mb-3">
-                <input class="form-control" autocomplete="off" id="new_company" name="new_company" type="text" maxlength="30" required>
-                <label for="new_company">New company name</label>
-            </div>
-            <input type="hidden" name="option" value="new_company">
-            <input class="btn btn-primary" type="submit" value="Save">
-        </form>
-        <br><br>
-        <hr>
-        <h4>Change password</h4>
-        <form action="{% url 'settings' %}" method="post">
-            {% csrf_token %}
-            <div class="form-floating mb-3">
-                <input class="form-control" autocomplete="off" id="current_password" name="current_password" type="password" required>
-                <label for="new_account">Current password</label>
-            </div>
-            <div class="form-floating mb-3">
-                <input class="form-control" autocomplete="off" id="new_password" name="new_password" type="password" required>
-                <label for="new_account">New password</label>
-            </div>
-            <div class="form-floating mb-3">
-                <input class="form-control" autocomplete="off" id="confirmation" name="confirmation" type="password" required>
-                <label for="new_account">Confirm new password</label>
-            </div>
-            <input type="hidden" name="option" value="change_password">
-            <input class="btn btn-primary" type="submit" value="Save">
-        </form>
-        <br><br>
-        <hr>
+                <input type="hidden" name="option" value="new_account">
+                <input class="btn btn-primary" type="submit" value="Save">
+            </form>
+        </div>
+
+        <div class="card-pw">
+            <h4>Category</h4>
+            <br>
+            <form action="{% url 'settings' %}" method="post">
+                {% csrf_token %}
+                <div class="form-floating mb-3">
+                    <input class="form-control" autocomplete="off" id="new_category" name="new_category" type="text" maxlength="30" required>
+                    <label for="new_category">New category name</label>
+                </div>
+                <div class="check-form">
+                    <div class="form-check-inline">
+                        <input class="form-check-input" type="radio" id="expense" name="category_type" value="E" checked="checked">
+                        <label class="form-check-label" for="category_type">Expense</label>
+                    </div>
+                    <div class="form-check-inline">
+                        <input class="form-check-input" type="radio" id="income" name="category_type" value="I">
+                        <label class="form-check-label" for="category_type">Income</label>
+                    </div>
+                </div>
+                <input type="hidden" name="option" value="new_category">
+                <input class="btn btn-primary" type="submit" value="Save">
+            </form>
+        </div>
+
+        <div class="card-pw">
+            <h4>Company</h4>
+            <br>
+            <form action="{% url 'settings' %}" method="post">
+                {% csrf_token %}
+                <div class="form-floating mb-3">
+                    <input class="form-control" autocomplete="off" id="new_company" name="new_company" type="text" maxlength="30" required>
+                    <label for="new_company">New company name</label>
+                </div>
+                <input type="hidden" name="option" value="new_company">
+                <input class="btn btn-primary" type="submit" value="Save">
+            </form>
+        </div>
+
+        <div class="card-pw">
+            <h4>Change password</h4>
+            <br>
+            <form action="{% url 'settings' %}" method="post">
+                {% csrf_token %}
+                <div class="form-floating mb-3">
+                    <input class="form-control" autocomplete="off" id="current_password" name="current_password" type="password" required>
+                    <label for="current_password">Current password</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input class="form-control" autocomplete="off" id="new_password" name="new_password" type="password" required>
+                    <label for="new_password">New password</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input class="form-control" autocomplete="off" id="confirmation" name="confirmation" type="password" required>
+                    <label for="confirmation">Confirm new password</label>
+                </div>
+                <input type="hidden" name="option" value="change_password">
+                <input class="btn btn-primary" type="submit" value="Save">
+            </form>
+        </div>
 
     </div>
-
 
 {% endblock %}

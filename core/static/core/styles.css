@@ -478,6 +478,13 @@ h6 { font-size: 13px; font-weight: 500; }
     box-shadow: var(--shadow-sm);
 }
 
+.forms:has(.card-pw) {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+}
+
 .form-control, .form-select {
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
@@ -630,6 +637,10 @@ h6 { font-size: 13px; font-weight: 500; }
 
 .amount-box { width: 120px; }
 
+@media (max-width: 1024px) {
+    .amount-box { width: 100%; }
+}
+
 /* ============================================
    TAB SWITCHER (index page)
    ============================================ */
@@ -779,6 +790,7 @@ h6 { font-size: 13px; font-weight: 500; }
 .weekend-warning {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     background: #fff8e6;
     border: 1px solid #f0d080;
@@ -787,6 +799,7 @@ h6 { font-size: 13px; font-weight: 500; }
     font-size: 13px;
     color: #7a5c00;
     margin-bottom: 16px;
+    text-align: center;
 }
 
 /* ============================================
@@ -882,14 +895,86 @@ a:hover { color: var(--accent-light); }
    RESPONSIVE
    ============================================ */
 
-@media (max-width: 900px) {
-    .sidebar { display: none; }
-    .mobile-header { display: flex; }
+@media (max-width: 1024px) {
+    .sidebar { display: none !important; }
+    .mobile-header { display: flex !important; }
     .mobile-nav { display: flex; }
-    .main-content { margin-left: 0; padding: 80px 20px 32px; }
+    .main-content { margin-left: 0 !important; padding: 80px 20px 32px; }
     .forms { padding: 24px 20px; }
+
+    /* Tables — card layout */
     .table thead { display: none; }
-    .table td { display: block; padding: 6px 12px; }
-    .table td:first-child { padding-top: 12px; }
-    .table td:last-child { padding-bottom: 12px; }
+
+    .table tbody tr {
+        display: block;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        margin-bottom: 10px;
+        padding: 12px 14px;
+        box-shadow: var(--shadow-sm);
+    }
+
+    /* Expanded settle row — floats between cards */
+    .table tbody tr[id] {
+        border: 1px dashed var(--border);
+        border-radius: var(--radius);
+        margin-top: -10px;
+        margin-bottom: 10px;
+        background: var(--surface-2);
+        box-shadow: none;
+    }
+
+    .table tbody tr.settled {
+        border-left: 3px solid var(--success);
+        background: var(--success-bg) !important;
+    }
+
+    .table tbody tr.expired-expense,
+    .table tbody tr.expired-income {
+        border-left: 3px solid var(--danger);
+    }
+
+    .table tbody td {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 4px 0;
+        border: none !important;
+        font-size: 13px;
+        background: transparent !important;
+        color: inherit;
+        word-break: break-word;
+    }
+
+    .table tbody td::before {
+        content: attr(data-label);
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        min-width: 72px;
+        width: 72px;
+        flex-shrink: 0;
+        padding-top: 2px;
+    }
+
+    .table tbody td.slide-down-button {
+        justify-content: flex-end;
+        font-size: 18px;
+        padding-top: 6px;
+    }
+
+    .table tbody td.slide-down-button::before { display: none; }
+
+    .table tbody td.mobile-hidden { display: none !important; }
+
+    .table-hover tbody tr:hover { background: transparent; }
+
+    /* Class added by JS to the card after an expanded row */
+    .table tbody tr.push-down {
+        margin-top: 10px;
+    }
 }

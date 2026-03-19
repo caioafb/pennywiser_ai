@@ -73,11 +73,16 @@ function showMore(id) {
     el.style.animationDuration = "0.2s";
     el.style.animationPlaystate = "paused";
     el.style.animationFillMode = "forwards";
+
+    // Find the next sibling tr (the card below the expanded row)
+    const nextCard = el.nextElementSibling;
+
     if (el_button.innerHTML == "˅") {
         el_button.innerHTML = "˄";
         el.style.animationName = "slide-down";
         el.style.animationPlaystate = "running";
-        el.style.display = "table-row";  
+        el.style.display = "table-row";
+        if (nextCard) nextCard.classList.add("push-down");
     }
     else {
         el_button.innerHTML = "˅";
@@ -86,6 +91,7 @@ function showMore(id) {
         setTimeout(() => {
             el.style.display = "none";
           }, 200)
+        if (nextCard) nextCard.classList.remove("push-down");
     }
 }
 

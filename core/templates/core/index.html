@@ -14,7 +14,7 @@
                 <button class="btn btn-outline-dark" id="income-button" onclick="swap_tab(this)">Income</button>
             {% endif %}
         </div>
-        
+
         {% if message %}
             <div id="message" class="alert alert-success w-25 mx-auto">{{ message }}</div>
         {% elif error %}
@@ -49,31 +49,31 @@
                         {% else %}
                         <tr>
                         {% endif %}
-                            <td>
+                            <td data-label="Description">
                                 <form action="{% url 'edit' %}" method="get">
                                     <input type="hidden" name="transaction_id" value="{{ expense.id }}">
                                     <span class="edit-button" onclick="submitForm(this)">
-                                        {{ expense.description }} 
+                                        {{ expense.description }}
                                         {% if expense.installments %}
                                             - {{ expense.current_installment }} of {{ expense.installments }}
                                         {% endif %}
                                     </span>
                                 </form>
                             </td>
-                            <td>{{ expense.payment_info }}</td>
-                            <td>{{ expense.due_date }}</td>
-                            <td>{{ expense.category.name }}</td>
-                            <td>{{ expense.amount }}</td>
+                            <td data-label="Payment Info">{{ expense.payment_info }}</td>
+                            <td data-label="Due date">{{ expense.due_date }}</td>
+                            <td data-label="Category" class="mobile-hidden">{{ expense.category.name }}</td>
+                            <td data-label="Amount">{{ expense.amount }}</td>
                             <td class="slide-down-button {{ expense.id }}" onclick="showMore({{ expense.id }})">˅</td>
                         </tr>
                         <tr id="{{ expense.id }}" style="display:none">
                             <form action="{% url 'index' %}" method="post">
                                 {% csrf_token %}
-                                <td colspan="2">
+                                <td colspan="2" data-label="Settle desc.">
                                     <textarea class="form-control" rows="1" autofocus autocomplete="off" id="settle_description" name="settle_description" placeholder="Settle description"></textarea>
                                 </td>
-                                <td>
-                                    <select class="form-select" aria-label="Default select example" name="account_id" id="account_id" required>
+                                <td data-label="Account">
+                                    <select class="form-select" name="account_id" id="account_id" required>
                                         <option value="none" selected="selected" disabled>Account</option>
                                         {% for account in accounts %}
                                             <option value="{{ account.id }}">{{ account.name }}</option>
@@ -82,10 +82,10 @@
                                         {% endfor %}
                                     </select>
                                 </td>
-                                <td>
+                                <td data-label="Settle date">
                                     <input class="form-control today" autocomplete="off" autofocus id="settle_date" name="settle_date" type="date">
                                 </td>
-                                <td class="amount-box">
+                                <td data-label="Amount" class="amount-box">
                                     <input class="form-control" autocomplete="off" id="amount" name="amount" value="{{ expense.amount }}" type="number" min="0" step="0.01">
                                 </td>
                                 <td>
@@ -104,10 +104,9 @@
                 <p class="text-end me-5">Total: <strong>{{ todays_expenses_total|floatformat:2 }}</strong></p>
             {% endif %}
             {% if has_expired_on_weekend %}
-                <p class="d-flex justify-content-center align-items-center">❗Attention: You have one or more expenses due this weekend.❗</p>
-            {% else %}
-                <br>
+                <p class="weekend-warning">❗ You have one or more expenses due this weekend. Consider settling them in advance.</p>
             {% endif %}
+
             {% if settled_expenses %}
                 <h4>Settled</h4>
                 <table class="table table-hover">
@@ -124,22 +123,22 @@
                     <tbody>
                         {% for expense in settled_expenses %}
                             <tr class="settled">
-                                <td>
+                                <td data-label="Description">
                                     <form action="{% url 'edit' %}" method="get">
                                         <input type="hidden" name="transaction_id" value="{{ expense.id }}">
                                         <span class="edit-button" onclick="submitForm(this)">
-                                            {{ expense.description }} 
+                                            {{ expense.description }}
                                             {% if expense.installments %}
                                                 - {{ expense.current_installment }} of {{ expense.installments }}
                                             {% endif %}
                                         </span>
                                     </form>
                                 </td>
-                                <td>{{ expense.payment_info }}</td>
-                                <td>{{ expense.due_date }}</td>
-                                <td>{{ expense.category.name }}</td>
-                                <td>{{ expense.amount }}</td>
-                                <td>{{ expense.settle_account.name }}</td>
+                                <td data-label="Payment Info">{{ expense.payment_info }}</td>
+                                <td data-label="Due date">{{ expense.due_date }}</td>
+                                <td data-label="Category" class="mobile-hidden">{{ expense.category.name }}</td>
+                                <td data-label="Amount">{{ expense.amount }}</td>
+                                <td data-label="Account">{{ expense.settle_account.name }}</td>
                             </tr>
                         {% empty %}
                             <tr><td colspan="7">No settled transactions.</td></tr>
@@ -150,16 +149,17 @@
                     <p class="text-end me-5">Total: <strong>{{ settled_expenses_total|floatformat:2 }}</strong></p>
                 {% endif %}
             {% endif %}
+
             <br>
             <h4 class="form-check-inline">Upcoming</h4>
             <form action="{% url 'index' %}" method="post">
                 {% csrf_token %}
-                <select name="upcoming_range" id="upcoming_range" onchange="this.form.submit()">    
+                <select name="upcoming_range" id="upcoming_range" onchange="this.form.submit()">
                     {% for i in upcoming_range_iterator %}
-                        {% if upcoming_range == i%}
-                            <option value="{{ i }}" selected>{{i}}</option>
+                        {% if upcoming_range == i %}
+                            <option value="{{ i }}" selected>{{ i }}</option>
                         {% else %}
-                            <option value="{{ i }}">{{i}}</option>
+                            <option value="{{ i }}">{{ i }}</option>
                         {% endif %}
                     {% endfor %}
                 </select>
@@ -179,34 +179,34 @@
                 <tbody>
                     {% for expense in upcoming_expenses %}
                         <tr>
-                            <td>
+                            <td data-label="Description">
                                 <form action="{% url 'edit' %}" method="get">
                                     <input type="hidden" name="transaction_id" value="{{ expense.id }}">
                                     <span class="edit-button" onclick="submitForm(this)">
                                         {% if expense.is_weekend %}
                                             <strong><small>[Weekend]</small></strong>
                                         {% endif %}
-                                        {{ expense.description }} 
+                                        {{ expense.description }}
                                         {% if expense.installments %}
                                             - {{ expense.current_installment }} of {{ expense.installments }}
                                         {% endif %}
                                     </span>
                                 </form>
                             </td>
-                            <td>{{ expense.payment_info }}</td>
-                            <td>{{ expense.due_date }}</td>
-                            <td>{{ expense.category.name }}</td>
-                            <td>{{ expense.amount }}</td>
+                            <td data-label="Payment Info">{{ expense.payment_info }}</td>
+                            <td data-label="Due date">{{ expense.due_date }}</td>
+                            <td data-label="Category" class="mobile-hidden">{{ expense.category.name }}</td>
+                            <td data-label="Amount">{{ expense.amount }}</td>
                             <td class="slide-down-button {{ expense.id }}" onclick="showMore({{ expense.id }})">˅</td>
                         </tr>
                         <tr id="{{ expense.id }}" style="display:none">
                             <form action="{% url 'index' %}" method="post">
                                 {% csrf_token %}
-                                <td colspan="2">
+                                <td colspan="2" data-label="Settle desc.">
                                     <textarea class="form-control" rows="1" autofocus autocomplete="off" id="settle_description" name="settle_description" placeholder="Settle description"></textarea>
                                 </td>
-                                <td>
-                                    <select class="form-select" aria-label="Default select example" name="account_id" id="account_id" required>
+                                <td data-label="Account">
+                                    <select class="form-select" name="account_id" id="account_id" required>
                                         <option value="none" selected="selected" disabled>Account</option>
                                         {% for account in accounts %}
                                             <option value="{{ account.id }}">{{ account.name }}</option>
@@ -215,10 +215,10 @@
                                         {% endfor %}
                                     </select>
                                 </td>
-                                <td>
+                                <td data-label="Settle date">
                                     <input class="form-control today" autocomplete="off" autofocus id="settle_date" name="settle_date" type="date">
                                 </td>
-                                <td class="amount-box">
+                                <td data-label="Amount" class="amount-box">
                                     <input class="form-control" autocomplete="off" id="amount" name="amount" value="{{ expense.amount }}" type="number" min="0" step="0.01">
                                 </td>
                                 <td>
@@ -237,6 +237,7 @@
                 <p class="text-end me-5">Total: <strong>{{ upcoming_expenses_total|floatformat:2 }}</strong></p>
             {% endif %}
         </div>
+
         <!-- INCOME TAB -->
         {% if came_from_income %}
         <div id="income">
@@ -265,31 +266,31 @@
                         {% else %}
                         <tr>
                         {% endif %}
-                            <td>
+                            <td data-label="Description">
                                 <form action="{% url 'edit' %}" method="get">
                                     <input type="hidden" name="transaction_id" value="{{ income.id }}">
                                     <span class="edit-button" onclick="submitForm(this)">
-                                        {{ income.description }} 
+                                        {{ income.description }}
                                         {% if income.installments %}
                                             - {{ income.current_installment }} of {{ income.installments }}
                                         {% endif %}
                                     </span>
                                 </form>
                             </td>
-                            <td>{{ income.payment_info }}</td>
-                            <td>{{ income.due_date }}</td>
-                            <td>{{ income.category.name }}</td>
-                            <td>{{ income.amount }}</td>
+                            <td data-label="Payment Info">{{ income.payment_info }}</td>
+                            <td data-label="Due date">{{ income.due_date }}</td>
+                            <td data-label="Category" class="mobile-hidden">{{ income.category.name }}</td>
+                            <td data-label="Amount">{{ income.amount }}</td>
                             <td class="slide-down-button {{ income.id }}" onclick="showMore({{ income.id }})">˅</td>
                         </tr>
                         <tr id="{{ income.id }}" style="display:none">
                             <form action="{% url 'index' %}" method="post">
                                 {% csrf_token %}
-                                <td colspan="2">
+                                <td colspan="2" data-label="Settle desc.">
                                     <textarea class="form-control" rows="1" autofocus autocomplete="off" id="settle_description" name="settle_description" placeholder="Settle description"></textarea>
                                 </td>
-                                <td>
-                                    <select class="form-select" aria-label="Default select example" name="account_id" id="account_id" required>
+                                <td data-label="Account">
+                                    <select class="form-select" name="account_id" id="account_id" required>
                                         <option value="none" selected="selected" disabled>Account</option>
                                         {% for account in accounts %}
                                             <option value="{{ account.id }}">{{ account.name }}</option>
@@ -298,10 +299,10 @@
                                         {% endfor %}
                                     </select>
                                 </td>
-                                <td>
+                                <td data-label="Settle date">
                                     <input class="form-control today" autocomplete="off" autofocus id="settle_date" name="settle_date" type="date">
                                 </td>
-                                <td class="amount-box">
+                                <td data-label="Amount" class="amount-box">
                                     <input class="form-control" autocomplete="off" id="amount" name="amount" value="{{ income.amount }}" type="number" min="0" step="0.01">
                                 </td>
                                 <td>
@@ -319,7 +320,7 @@
             {% if todays_incomes %}
                 <p class="text-end me-5">Total: <strong>{{ todays_incomes_total|floatformat:2 }}</strong></p>
             {% endif %}
-            <br>
+
             {% if settled_incomes %}
                 <h4>Settled</h4>
                 <table class="table table-hover">
@@ -336,22 +337,22 @@
                     <tbody>
                         {% for income in settled_incomes %}
                             <tr class="settled">
-                                <td>
+                                <td data-label="Description">
                                     <form action="{% url 'edit' %}" method="get">
                                         <input type="hidden" name="transaction_id" value="{{ income.id }}">
                                         <span class="edit-button" onclick="submitForm(this)">
-                                            {{ income.description }} 
+                                            {{ income.description }}
                                             {% if income.installments %}
                                                 - {{ income.current_installment }} of {{ income.installments }}
                                             {% endif %}
                                         </span>
                                     </form>
                                 </td>
-                                <td>{{ income.payment_info }}</td>
-                                <td>{{ income.due_date }}</td>
-                                <td>{{ income.category.name }}</td>
-                                <td>{{ income.amount }}</td>
-                                <td>{{ income.settle_account.name }}</td>
+                                <td data-label="Payment Info">{{ income.payment_info }}</td>
+                                <td data-label="Due date">{{ income.due_date }}</td>
+                                <td data-label="Category" class="mobile-hidden">{{ income.category.name }}</td>
+                                <td data-label="Amount">{{ income.amount }}</td>
+                                <td data-label="Account">{{ income.settle_account.name }}</td>
                             </tr>
                         {% empty %}
                             <tr><td colspan="7">No settled transactions.</td></tr>
@@ -362,16 +363,17 @@
                     <p class="text-end me-5">Total: <strong>{{ settled_incomes_total|floatformat:2 }}</strong></p>
                 {% endif %}
             {% endif %}
+
             <br>
             <h4 class="form-check-inline">Upcoming</h4>
             <form action="{% url 'index' %}" method="post">
                 {% csrf_token %}
-                <select name="upcoming_range" id="upcoming_range" onchange="this.form.submit()">    
+                <select name="upcoming_range" id="upcoming_range" onchange="this.form.submit()">
                     {% for i in upcoming_range_iterator %}
-                        {% if upcoming_range == i%}
-                            <option value="{{ i }}" selected>{{i}}</option>
+                        {% if upcoming_range == i %}
+                            <option value="{{ i }}" selected>{{ i }}</option>
                         {% else %}
-                            <option value="{{ i }}">{{i}}</option>
+                            <option value="{{ i }}">{{ i }}</option>
                         {% endif %}
                     {% endfor %}
                 </select>
@@ -391,31 +393,31 @@
                 <tbody>
                     {% for income in upcoming_incomes %}
                         <tr>
-                            <td>
+                            <td data-label="Description">
                                 <form action="{% url 'edit' %}" method="get">
                                     <input type="hidden" name="transaction_id" value="{{ income.id }}">
                                     <span class="edit-button" onclick="submitForm(this)">
-                                        {{ income.description }} 
+                                        {{ income.description }}
                                         {% if income.installments %}
                                             - {{ income.current_installment }} of {{ income.installments }}
                                         {% endif %}
                                     </span>
                                 </form>
                             </td>
-                            <td>{{ income.payment_info }}</td>
-                            <td>{{ income.due_date }}</td>
-                            <td>{{ income.category.name }}</td>
-                            <td>{{ income.amount }}</td>
+                            <td data-label="Payment Info">{{ income.payment_info }}</td>
+                            <td data-label="Due date">{{ income.due_date }}</td>
+                            <td data-label="Category" class="mobile-hidden">{{ income.category.name }}</td>
+                            <td data-label="Amount">{{ income.amount }}</td>
                             <td class="slide-down-button {{ income.id }}" onclick="showMore({{ income.id }})">˅</td>
                         </tr>
                         <tr id="{{ income.id }}" style="display:none">
                             <form action="{% url 'index' %}" method="post">
                                 {% csrf_token %}
-                                <td colspan="2">
+                                <td colspan="2" data-label="Settle desc.">
                                     <textarea class="form-control" rows="1" autofocus autocomplete="off" id="settle_description" name="settle_description" placeholder="Settle description"></textarea>
                                 </td>
-                                <td>
-                                    <select class="form-select" aria-label="Default select example" name="account_id" id="account_id" required>
+                                <td data-label="Account">
+                                    <select class="form-select" name="account_id" id="account_id" required>
                                         <option value="none" selected="selected" disabled>Account</option>
                                         {% for account in accounts %}
                                             <option value="{{ account.id }}">{{ account.name }}</option>
@@ -424,10 +426,10 @@
                                         {% endfor %}
                                     </select>
                                 </td>
-                                <td>
+                                <td data-label="Settle date">
                                     <input class="form-control today" autocomplete="off" autofocus id="settle_date" name="settle_date" type="date">
                                 </td>
-                                <td class="amount-box">
+                                <td data-label="Amount" class="amount-box">
                                     <input class="form-control" autocomplete="off" id="amount" name="amount" value="{{ income.amount }}" type="number" min="0" step="0.01">
                                 </td>
                                 <td>
