@@ -376,6 +376,7 @@ def archive(request):
         expense_income_option = request.POST["expense_income_option"]
 
         search_data = Transaction.objects.filter(company= request.session["company_id"], description__icontains=search, category__type=expense_income_option, settle_date__isnull=bool(is_unsettled))
+        total = search_data.aggregate(total_amount=Sum('amount'))['total_amount'] or 0
 
         if is_unsettled:
             if from_date:
@@ -412,7 +413,8 @@ def archive(request):
             "search_parameters": search_parameters,
             "page": page,
             "iterator": iterator,
-            "max_page": max_page
+            "max_page": max_page,
+            "total": total
         })
 
     return render(request, "core/archive.html")

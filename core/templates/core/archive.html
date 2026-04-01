@@ -130,8 +130,7 @@
                         </tbody>
                     </table>
                 </div>
-
-                <nav class="pagination-menu d-flex justify-content-center">
+                <p class="text-end me-3">Total: <strong>{{ total|floatformat:2 }}</strong></p>
                     <ul class="pagination">
                         <form action="{% url 'archive' %}" method="post">
                             {% csrf_token %}
