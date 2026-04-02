@@ -2,11 +2,12 @@
 
 {% block body %}
 
-
 {% if date %}
     <div class="container">
+
+        <!-- Tab switcher — centered -->
         {% if expense_income_exists and projected_exists %}
-        <div class="btn-menu mb-1">
+        <div class="btn-menu mb-1" style="justify-content:center;">
         {% else %}
         <div class="btn-menu mb-1" style="display:none;">
         {% endif %}
@@ -21,8 +22,18 @@
         {% endif %}
             <h2>Overview</h2>
             <br>
-            <h5>{{ date }}</h5>
-            <br>
+
+            <!-- Month navigation -->
+            <form id="month-nav-form" action="{% url 'overview' %}" method="post" style="display:none;">
+                {% csrf_token %}
+                <input type="hidden" name="date" id="nav-date-input">
+            </form>
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+                <button type="button" class="btn-month-nav" onclick="navigateMonth('{{ date }}', -1)">&#8249;</button>
+                <h5 style="margin:0;">{{ date }}</h5>
+                <button type="button" class="btn-month-nav" onclick="navigateMonth('{{ date }}', 1)">&#8250;</button>
+            </div>
+
             <div class="container">
                 <table class="table table-hover table-borderless">
                     <thead class="table-light">
@@ -109,8 +120,14 @@
         {% endif %}
             <h2>Projection</h2>
             <br>
-            <h5>{{ date }}</h5>
-            <br>
+
+            <!-- Month navigation (projection tab) -->
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+                <button type="button" class="btn-month-nav" onclick="navigateMonth('{{ date }}', -1)">&#8249;</button>
+                <h5 style="margin:0;">{{ date }}</h5>
+                <button type="button" class="btn-month-nav" onclick="navigateMonth('{{ date }}', 1)">&#8250;</button>
+            </div>
+
             <div class="container">
                 <table class="table table-hover table-borderless">
                     <thead class="table-light">
@@ -218,6 +235,7 @@
             </div>
         </div>
     </div>
+
 {% else %}
     <div class="forms">
         <h2>Overview</h2>
@@ -237,5 +255,23 @@
         </form>
     </div>
 {% endif %}
+
+{% block script %}
+<script>
+    function navigateMonth(dateStr, direction) {
+        // dateStr comes in as "Month YYYY" e.g. "April 2026"
+        const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        const parts = dateStr.split(" ");
+        let month = months.indexOf(parts[0]);
+        let year = parseInt(parts[1]);
+        month += direction;
+        if (month > 11) { month = 0; year++; }
+        if (month < 0)  { month = 11; year--; }
+        const formatted = year + "-" + String(month + 1).padStart(2, "0");
+        document.getElementById("nav-date-input").value = formatted;
+        document.getElementById("month-nav-form").submit();
+    }
+</script>
+{% endblock %}
 
 {% endblock %}
