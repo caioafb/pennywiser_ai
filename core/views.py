@@ -550,6 +550,11 @@ def edit(request):
                         pass
                     count = count + 1
 
+            # Replicate before deleting, if checkbox was checked
+            replicate_before_delete = request.POST.get("replicate_before_delete")
+            if replicate_before_delete:
+                replicate(transaction, True)
+
             transaction.delete()
             message = "Transaction deleted successfully."
 

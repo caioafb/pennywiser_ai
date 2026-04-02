@@ -173,6 +173,10 @@ function submitForm(img) {
 function showDeleteConfirmation() {
     document.getElementById("delete").style.display = "none";
     document.getElementById("confirmation").style.display = "initial";
+    const replicateBox = document.getElementById("replicate-before-delete");
+    if (replicateBox) {
+        replicateBox.style.display = "flex";
+    }
 }
 
 // Swap between statement and projection tables

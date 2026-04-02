@@ -102,11 +102,18 @@
             <div style="display:flex; align-items:center; margin-top:8px; flex-wrap:wrap; gap:8px;">
                 <button class="btn btn-primary" name="edit" value="edit_transaction" type="submit">Save</button>
                 <button class="btn btn-secondary" name="edit" value="copy_transaction" type="submit">Copy</button>
-                <div style="margin-left:auto;">
+                <div style="margin-left:auto; display:flex; gap:8px;">
                     <button class="btn btn-warning" id="confirmation" name="edit" value="delete_transaction" type="submit" style="display:none;">Delete?</button>
                     <button class="btn btn-danger" id="delete" type="button" onclick="showDeleteConfirmation()">Delete</button>
                 </div>
             </div>
+
+            {% if transaction.replicate != 'O' and not transaction.has_replicated and not transaction.installments %}
+                <div id="replicate-before-delete" style="display:none; justify-content:flex-end; align-items:center; gap:6px; margin-top:10px;">
+                    <label class="form-check-label" for="replicate_before_delete">Replicate before deleting?</label>
+                    <input class="form-check-input" type="checkbox" name="replicate_before_delete" id="replicate_before_delete" value="True">
+                </div>
+            {% endif %}
         </form>
     </div>
 
