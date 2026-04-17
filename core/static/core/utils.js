@@ -136,10 +136,21 @@ function showSettle(el) {
     settle_box.style.animationPlaystate = "paused";
     settle_box.style.animationFillMode = "forwards";
     transfer_checkbox = document.getElementById("transfer")
+    const settle_description_box = document.getElementById("settle-description-box");
+    if (settle_description_box) {
+        settle_description_box.style.animationDuration = "0.2s";
+        settle_description_box.style.animationPlaystate = "paused";
+        settle_description_box.style.animationFillMode = "forwards";
+    }
     if (el.checked) {
         settle_box.style.animationName = "slide-down";
         settle_box.style.animationPlaystate = "running";
         settle_box.style.display = "block";
+        if (settle_description_box) {
+            settle_description_box.style.animationName = "slide-down";
+            settle_description_box.style.animationPlaystate = "running";
+            settle_description_box.style.display = "block";
+        }
         transfer_checkbox.disabled = true;
         document.getElementById("monthly").setAttribute("disabled", "");
         document.getElementById("bimonthly").setAttribute("disabled", "");
@@ -151,9 +162,12 @@ function showSettle(el) {
     else {
         settle_box.style.animationName = "slide-up";
         settle_box.style.animationPlaystate = "running";
-        setTimeout(() => {
-            settle_box.style.display = "none";
-          }, 200)
+        setTimeout(() => { settle_box.style.display = "none"; }, 200);
+        if (settle_description_box) {
+            settle_description_box.style.animationName = "slide-up";
+            settle_description_box.style.animationPlaystate = "running";
+            setTimeout(() => { settle_description_box.style.display = "none"; }, 200);
+        }
         transfer_checkbox.disabled = false;
         document.getElementById("monthly").removeAttribute("disabled");
         document.getElementById("bimonthly").removeAttribute("disabled");

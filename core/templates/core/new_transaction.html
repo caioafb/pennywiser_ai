@@ -5,22 +5,27 @@
     <div class="forms">
         <form action="{% url 'new_transaction' %}" id="transaction_form" method="post">
             {% csrf_token %}
-            <h2 class="form-check-inline">New Transaction</h2>
-            <div class="form-check-inline float-end mt-2">
-                <label class="form-check-label" for="settle">Settle</label>
-                <input class="form-check-input" type="checkbox" value=True id="settle" name="settle" onchange="showSettle(this)">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 20px;">
+                <h2 style="margin:0;">New Transaction</h2>
+                <div style="display:flex; gap: 16px; align-items:center;">
+                    <label style="display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-secondary); cursor:pointer;">
+                        <input class="form-check-input" type="checkbox" value=True id="transfer" name="transfer" onchange="showTransfer(this)" style="margin:0;">
+                        Transfer
+                    </label>
+                    <label style="display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-secondary); cursor:pointer;">
+                        <input class="form-check-input" type="checkbox" value=True id="settle" name="settle" onchange="showSettle(this)" style="margin:0;">
+                        Settle
+                    </label>
+                </div>
             </div>
-            <div class="form-check-inline float-end mt-2">
-                <label class="form-check-label" for="transfer">Transfer</label>
-                <input class="form-check-input" type="checkbox" value=True id="transfer" name="transfer" onchange="showTransfer(this)">
-            </div>
+
             {% if message %}
                 <div id="message" class="alert alert-success">{{ message }}</div>
             {% endif %}
             {% if error %}
                 <div id="message" class="alert alert-danger">{{ error }}</div>
             {% endif %}
-        
+
             <!-- Hidden transfer box -->
             <div id="transfer-box" style="display:none">
                 <div class="form-floating mb-3">
@@ -45,8 +50,8 @@
                     </select>
                     <label for="to">To</label>
                 </div>
-                <hr style="height: 2px;">
             </div>
+
             <!-- Hidden settle box -->
             <div id="settle-box" style="display:none">
                 <div class="form-floating mb-3">
@@ -60,12 +65,13 @@
                     </select>
                     <label for="account_id">Settle account</label>
                 </div>
-                <hr style="height: 2px;">
             </div>
+
             <div class="form-floating mb-3">
                 <input class="form-control" autocomplete="off" id="due_date" name="due_date" type="date" value="{{ today|date:"Y-m-d" }}">
                 <label for="due_date">Due date</label>
             </div>
+
             {% if transaction %}
                 <div class="form-floating mb-3">
                     <select class="form-control" name="category" id="category" required>
@@ -91,6 +97,12 @@
                 <div class="form-floating mb-3">
                     <textarea class="form-control" maxlength="255" autocomplete="off" id="description" name="description" required>{{ transaction.description }}</textarea>
                     <label for="description">Description</label>
+                </div>
+                <div id="settle-description-box" style="display:none">
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" maxlength="255" autocomplete="off" id="settle_description" name="settle_description"></textarea>
+                        <label for="settle_description">Settle description</label>
+                    </div>
                 </div>
             {% else %}
                 <div class="form-floating mb-3">
@@ -123,38 +135,53 @@
                     <textarea class="form-control" maxlength="255" autocomplete="off" id="description" name="description" required></textarea>
                     <label for="description">Description</label>
                 </div>
+                <div id="settle-description-box" style="display:none">
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" maxlength="255" autocomplete="off" id="settle_description" name="settle_description"></textarea>
+                        <label for="settle_description">Settle description</label>
+                    </div>
+                </div>
             {% endif %}
-            <div class="check-form">
-                <p class="form-check-inline">Replicate:</p>
-                <div class="form-check-inline">
-                    <input class="form-check-input" type="radio" id="once" name="replicate" value="O" checked="checked" onchange="enableInstallment()">
-                    <label class="form-check-label" for="replicate">Once</label>
-                </div>
-                <div class="form-check-inline">
-                    <input class="form-check-input" type="radio" id="monthly" name="replicate" value="M" onchange="disableInstallment()">
-                    <label class="form-check-label" for="replicate">Monthly</label>
-                </div>
-                <div class="form-check-inline">
-                    <input class="form-check-input" type="radio" id="bimonthly" name="replicate" value="B" onchange="disableInstallment()">
-                    <label class="form-check-label" for="replicate">Bimonthly</label>
-                </div>
-                <div class="form-check-inline">
-                    <input class="form-check-input" type="radio" id="quarterly" name="replicate" value="Q" onchange="disableInstallment()">
-                    <label class="form-check-label" for="replicate">Quarterly</label>
-                </div>
-                <div class="form-check-inline mb-3">
-                    <input class="form-check-input" type="radio" id="yearly" name="replicate" value="Y" onchange="enableInstallment()">
-                    <label class="form-check-label" for="replicate">Yearly</label>
+
+            <!-- Replicate options -->
+            <div class="replicate-section mb-3">
+                <p class="replicate-label">Replicate</p>
+                <div class="replicate-options">
+                    <label class="replicate-option">
+                        <input class="form-check-input" type="radio" id="once" name="replicate" value="O" checked="checked" onchange="enableInstallment()">
+                        Once
+                    </label>
+                    <label class="replicate-option">
+                        <input class="form-check-input" type="radio" id="monthly" name="replicate" value="M" onchange="disableInstallment()">
+                        Monthly
+                    </label>
+                    <label class="replicate-option">
+                        <input class="form-check-input" type="radio" id="bimonthly" name="replicate" value="B" onchange="disableInstallment()">
+                        Bimonthly
+                    </label>
+                    <label class="replicate-option">
+                        <input class="form-check-input" type="radio" id="quarterly" name="replicate" value="Q" onchange="disableInstallment()">
+                        Quarterly
+                    </label>
+                    <label class="replicate-option">
+                        <input class="form-check-input" type="radio" id="yearly" name="replicate" value="Y" onchange="enableInstallment()">
+                        Yearly
+                    </label>
                 </div>
             </div>
-            <div class="check-form">
-                <label class="form-check-label" for="has_installments">Has installments&nbsp;</label>
-                <input class="form-check-input" type="checkbox" value=True name="has_installments" id="has_installments" onchange="showInstallments(this)">
+
+            <!-- Installments -->
+            <div class="replicate-section mb-3">
+                <label class="replicate-option" style="justify-content:center;">
+                    <input class="form-check-input" type="checkbox" value=True name="has_installments" id="has_installments" onchange="showInstallments(this)">
+                    Has installments
+                </label>
+                <div class="form-group" style="text-align:center;">
+                    <input class="form-control mx-auto" autocomplete="off" autofocus id="installments" name="installments" type="number" min="2" step="1" onchange="checkInstallments(this)">
+                </div>
             </div>
-            <div class="form-group">
-                <input class="form-control mx-auto" autocomplete="off" autofocus id="installments" name="installments" type="number" min="2" step="1" onchange="checkInstallments(this)">
-            </div>
-            <input class="btn btn-primary" type="submit" value="Submit">
+
+            <input class="btn btn-primary w-100 mt-2" type="submit" value="Submit">
         </form>
     </div>
 

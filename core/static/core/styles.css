@@ -806,12 +806,21 @@ h6 { font-size: 13px; font-weight: 500; }
    TRANSFER / SETTLE BOXES
    ============================================ */
 
-#transfer-box, #settle-box {
+#transfer-box, #settle-box, #settle-description-box {
     background: var(--surface-2);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     padding: 16px;
     margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#transfer-box .form-floating,
+#settle-box .form-floating,
+#settle-description-box .form-floating {
+    margin-bottom: 0 !important;
 }
 
 /* ============================================
