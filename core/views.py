@@ -79,7 +79,9 @@ def settle(transaction, request, transfer):
 # Replicate function for copy transaction and replicate to the next due_date, forced variable was created to force replication before transaction expired
 def replicate(transaction, forced):
     today = datetime.today().date()
-    if transaction.replicate == "M":
+    if transaction.replicate == "W":
+        months = 0 # When months equals zero, it will replicate weekly
+    elif transaction.replicate == "M":
         months = 1
     elif transaction.replicate == "B":
         months = 2
@@ -92,12 +94,16 @@ def replicate(transaction, forced):
         if forced:
             forced = False
 
-        due_date = transaction.due_date + relativedelta(months=months)
+        if months == 0:
+            due_date = transaction.due_date + relativedelta(weeks=1)
+        else:
+            due_date = transaction.due_date + relativedelta(months=months)
+
         new_transaction = Transaction(company=transaction.company, user=transaction.user, due_date=due_date, category=transaction.category, amount=transaction.amount, payment_info=transaction.payment_info,
                                         description=transaction.description, replicate=transaction.replicate, installments=transaction.installments, current_installment=transaction.current_installment, parent_id=transaction.id)
         new_transaction.save()
         # Check if new transaction due_date should be last day of month, comparing with parent's transaction
-        if transaction.is_last_day_of_month() and not new_transaction.is_last_day_of_month():
+        if transaction.is_last_day_of_month() and not new_transaction.is_last_day_of_month() and months > 0:
             try:
                 parent_transaction = Transaction.objects.get(id=transaction.parent_id)
             except:

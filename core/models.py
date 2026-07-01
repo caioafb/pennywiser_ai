@@ -71,6 +71,7 @@ class MonthlyAccountBalance(models.Model):
 
 class Transaction(models.Model):
     REPLICATE_CHOICES = {
+        "W": "Weekly",
         "O": "Once",
         "M": "Monthly",
         "B": "Bimonthly",
