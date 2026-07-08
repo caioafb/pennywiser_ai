@@ -99,6 +99,25 @@
                 <a href="{% url 'overview' %}" class="sidebar-link">Overview</a>
                 <a href="{% url 'settings' %}" class="sidebar-link">Settings</a>
                 <a href="{% url 'new_transaction' %}" class="btn-new-transaction mt-3">+ New Transaction</a>
+
+                <div class="company-selector mt-3">
+                    <form action="/swap_company" method="post">
+                        {% csrf_token %}
+                        <label class="company-label">Company</label>
+                        <select class="company-select" name="selected_company" id="selected_company_mobile" onchange="this.form.submit()">
+                            {% for company in request.session.companies %}
+                                {% if company == request.session.company %}
+                                    <option value="{{ company }}" selected>{{ company }}</option>
+                                {% else %}
+                                    <option value="{{ company }}">{{ company }}</option>
+                                {% endif %}
+                            {% empty %}
+                                <option>No companies</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </div>
+
                 <a href="{% url 'logout' %}" class="sidebar-logout mt-3">Log Out</a>
             {% else %}
                 <a href="{% url 'login' %}" class="sidebar-link">Log In</a>
