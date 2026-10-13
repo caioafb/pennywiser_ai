@@ -21,6 +21,19 @@
             <div id="message" class="alert alert-danger w-25 mx-auto">{{ error }}</div>
         {% endif %}
 
+        {% if other_companies_with_expiring %}
+            <div class="expiring-companies-warning">
+                There are expiring transactions on:
+                {% for company in other_companies_with_expiring %}
+                    <form action="/swap_company" method="post" class="d-inline m-0 p-0">
+                        {% csrf_token %}
+                        <input type="hidden" name="selected_company" value="{{ company.name }}">
+                        <button type="submit" class="company-link-button">{{ company.name }}</button>
+                    </form>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
         <!-- EXPENSE TAB -->
         {% if came_from_income %}
         <div id="expense" style="display:none;">

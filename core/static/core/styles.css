@@ -784,10 +784,40 @@ h6 { font-size: 13px; font-weight: 500; }
 .swap-company { display: none; }
 
 /* ============================================
-   WEEKEND WARNING
+   WEEKEND / OTHER COMPANIES WARNING
    ============================================ */
 
 .weekend-warning {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #fff8e6;
+    border: 1px solid #f0d080;
+    border-radius: var(--radius-sm);
+    padding: 10px 16px;
+    font-size: 13px;
+    color: #7a5c00;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.company-link-button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #7a5c00;
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+    font: inherit;
+}
+
+.company-link-button:hover {
+    color: #5c4500;
+}
+
+.expiring-companies-warning {
     display: flex;
     align-items: center;
     justify-content: center;
