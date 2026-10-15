@@ -278,16 +278,19 @@ def index(request):
             for obj in upcoming_expenses
         )
         
-    # Check other companies with due/overdue unsettled transactions
-    other_companies_with_expiring = []
+    # Check other companies with due/overdue unsettled transactions, separated by type
+    other_companies_expiring_expenses = []
+    other_companies_expiring_incomes = []
     for company in request.user.owned_companies.exclude(id=request.session["company_id"]):
-        has_expiring = Transaction.objects.filter(
+        overdue = Transaction.objects.filter(
             company=company,
             due_date__lte=today,
             settle_date__isnull=True
-        ).exists()
-        if has_expiring:
-            other_companies_with_expiring.append(company)
+        )
+        if overdue.filter(category__type="E").exists():
+            other_companies_expiring_expenses.append(company)
+        if overdue.filter(category__type="I").exists():
+            other_companies_expiring_incomes.append(company)
             
     return render(request, "core/index.html", {
         "upcoming_range": upcoming_range,
@@ -306,7 +309,8 @@ def index(request):
         "settled_incomes": settled_incomes,
         "settled_incomes_total": settled_incomes_total,
         "has_expired_on_weekend": has_expired_on_weekend,
-        "other_companies_with_expiring": other_companies_with_expiring,
+        "other_companies_expiring_expenses": other_companies_expiring_expenses,
+        "other_companies_expiring_incomes": other_companies_expiring_incomes,
         "came_from_income": came_from_income,
         "today": today,
         "message": message,
