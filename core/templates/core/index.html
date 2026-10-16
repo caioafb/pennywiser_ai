@@ -263,6 +263,7 @@
                         <form action="/swap_company" method="post" class="d-inline m-0 p-0">
                             {% csrf_token %}
                             <input type="hidden" name="selected_company" value="{{ company.name }}">
+                            <input type="hidden" name="tab" value="income">
                             <button type="submit" class="company-link-button">{{ company.name }}</button>
                         </form>{% if not forloop.last %}, {% endif %}
                     {% endfor %}

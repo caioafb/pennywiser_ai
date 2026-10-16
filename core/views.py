@@ -237,7 +237,7 @@ def index(request):
     message = None
     error = None
     # By default the page loads on the expenses tab, this variable changes to the income tab if a form was sent from income
-    came_from_income = False 
+    came_from_income = request.GET.get("tab") == "income" 
     if request.method == "POST":
         if request.POST["action"] == "settle":
             transaction = Transaction.objects.get(id=request.POST["transaction_id"])
@@ -870,4 +870,6 @@ def swap_company(request):
     selected_company = Company.objects.get(name=request.POST["selected_company"], user=request.user)
     request.session["company"] = selected_company.name
     request.session["company_id"] = selected_company.id
+    if request.POST.get("tab") == "income":
+        return HttpResponseRedirect(reverse("index") + "?tab=income")
     return HttpResponseRedirect(reverse("index"))
